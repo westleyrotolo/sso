@@ -22,7 +22,7 @@ namespace SsoServer
             // Setup Controllers support for API endpoints
             builder.Services.AddControllers();
 
-            // The call to MigrationsAssembly(…) later tells Entity Framework that the host project will contain the migrations. This is necessary since the host project is in a different assembly than the one that contains the DbContext classes.
+            // The call to MigrationsAssembly(ï¿½) later tells Entity Framework that the host project will contain the migrations. This is necessary since the host project is in a different assembly than the one that contains the DbContext classes.
             var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
             string dbConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -30,7 +30,15 @@ namespace SsoServer
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(dbConnectionString));
 
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(opt =>
+            {
+                opt.Password.RequireDigit = false;
+                opt.Password.RequiredLength = 3;
+                opt.Password.RequiredUniqueChars = 1;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireUppercase = false;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -42,7 +50,6 @@ namespace SsoServer
                     options.Events.RaiseInformationEvents = true;
                     options.Events.RaiseFailureEvents = true;
                     options.Events.RaiseSuccessEvents = true;
-
                     // see https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/
                     options.EmitStaticAudienceClaim = true;
                 })
