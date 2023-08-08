@@ -31,15 +31,13 @@ namespace SsoServer.Data.Seeding
         public static IEnumerable<Client> ClientsToSeed =>
             new Client[]
             {
-                // Merchant
                 new Client
                 {
                     ClientId = "rutino",
-                    ClientName = "Comune di Rutino",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientName = "Comune Di Rutino",
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     // Secret code
                     ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
-
                     AllowedScopes = {
                         "api1",
                         "api2",

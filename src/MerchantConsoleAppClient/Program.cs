@@ -19,19 +19,19 @@ var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCr
 {
     Address = disco.TokenEndpoint,
 
-    ClientId = "merchant",
+    ClientId = "rutino",
     ClientSecret = "511536EF-F270-4058-80CA-1C89C192F69A",
-    Scope = "farmlandwebapi"
+    Scope = "QEApi"
 });
 
 var t = await client.RequestTokenAsync(new PasswordTokenRequest
 {
     Address = disco.TokenEndpoint,
     GrantType = "client_credentials",
-    ClientId = "merchant",
+    ClientId = "rutino",
     ClientSecret = "511536EF-F270-4058-80CA-1C89C192F69A",
-    UserName = "admin@test.ca",
-    Password = "Password123$"
+    UserName = "admin@rubrik.it",
+    Password = ".admin."
 });
 
 
