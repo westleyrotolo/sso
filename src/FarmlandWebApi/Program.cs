@@ -10,7 +10,7 @@ builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
         // This is the URL for our authentication server
-        options.Authority = "https://localhost:5001";
+        options.Authority = "https://auth.westley.it";
 
         options.TokenValidationParameters = new TokenValidationParameters
         {

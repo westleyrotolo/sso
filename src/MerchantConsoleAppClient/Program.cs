@@ -5,7 +5,7 @@ Console.WriteLine("Merchant in town...");
 // Find out who is the mighty authority,
 // i.e., discover endpoints from metadata
 var client = new HttpClient();
-var disco = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
+var disco = await client.GetDiscoveryDocumentAsync("https://auth.westley.it");
 if (disco.IsError)
 {
     Console.WriteLine(disco.Error);

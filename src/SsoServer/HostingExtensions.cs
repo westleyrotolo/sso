@@ -46,6 +46,7 @@ namespace SsoServer
             builder.Services
                 .AddIdentityServer(options =>
                 {
+                    options.IssuerUri = "https://auth.westley.it";
                     options.Events.RaiseErrorEvents = true;
                     options.Events.RaiseInformationEvents = true;
                     options.Events.RaiseFailureEvents = true;
