@@ -36,6 +36,10 @@ namespace SsoServer.Data.Seeding
                     ClientId = "rutino",
                     ClientName = "Comune Di Rutino",
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+                    Claims = new List<ClientClaim>
+                    {
+                        new ClientClaim("client_id", "rutino")
+                    },
                     // Secret code
                     ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
                     AllowedScopes = {
@@ -48,6 +52,10 @@ namespace SsoServer.Data.Seeding
                 {
                     ClientId = "torchiara",
                     ClientName = "Comune Di Torchiara",
+                    Claims = new List<ClientClaim>
+                    {
+                        new ClientClaim("client_id", "torchiara")
+                    },
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     // Secret code
                     ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
@@ -60,6 +68,10 @@ namespace SsoServer.Data.Seeding
                 new Client
                 {
                     ClientId = "lustra",
+                    Claims = new List<ClientClaim>
+                    {
+                        new ClientClaim("client_id", "lustra")
+                    },
                     ClientName = "Comune Di Lustra",
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     // Secret code
