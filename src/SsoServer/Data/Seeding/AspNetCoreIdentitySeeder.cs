@@ -91,7 +91,6 @@ namespace SsoServer.Data.Seeding
                 user.UserName = username;
                 user.Email = email;
                 user.EmailConfirmed = true;
-
                 // Create user
                 IdentityResult result = userManager.CreateAsync(user, password).Result;
 
@@ -112,7 +111,9 @@ namespace SsoServer.Data.Seeding
                     result = userManager.AddClaimsAsync(user, new Claim[]
                         {
                             new Claim(JwtClaimTypes.GivenName, firstname),
-                            new Claim(JwtClaimTypes.FamilyName, lastname)
+                            new Claim(JwtClaimTypes.FamilyName, lastname),
+                            new Claim(JwtClaimTypes.ClientId, "rutino"),
+                            new Claim(JwtClaimTypes.ClientId, "torchiara"),
                         }).Result;
 
                     if (!result.Succeeded)
