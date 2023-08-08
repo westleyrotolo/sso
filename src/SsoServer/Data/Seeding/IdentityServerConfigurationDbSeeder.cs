@@ -44,6 +44,32 @@ namespace SsoServer.Data.Seeding
                         QEApi
                     }
                 },
+                new Client
+                {
+                    ClientId = "torchiara",
+                    ClientName = "Comune Di Torchiara",
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+                    // Secret code
+                    ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
+                    AllowedScopes = {
+                        "api1",
+                        "api2",
+                        QEApi
+                    }
+                },
+                new Client
+                {
+                    ClientId = "lustra",
+                    ClientName = "Comune Di Lustra",
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+                    // Secret code
+                    ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
+                    AllowedScopes = {
+                        "api1",
+                        "api2",
+                        QEApi
+                    }
+                },
                 // interactive client using code flow + pkce
                 new Client
                 {
