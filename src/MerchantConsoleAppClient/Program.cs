@@ -14,6 +14,7 @@ if (disco.IsError)
 
 // Request a ticket to the farmland,
 // i.e., request for access token
+
 var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
 {
     Address = disco.TokenEndpoint,
@@ -22,6 +23,17 @@ var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCr
     ClientSecret = "511536EF-F270-4058-80CA-1C89C192F69A",
     Scope = "farmlandwebapi"
 });
+
+var t = await client.RequestTokenAsync(new PasswordTokenRequest
+{
+    Address = disco.TokenEndpoint,
+    GrantType = "client_credentials",
+    ClientId = "merchant",
+    ClientSecret = "511536EF-F270-4058-80CA-1C89C192F69A",
+    UserName = "admin@test.ca",
+    Password = "Password123$"
+});
+
 
 if (tokenResponse.IsError)
 {

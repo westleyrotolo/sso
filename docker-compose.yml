@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  ssoserver:
+    image: ${DOCKER_REGISTRY-}ssoserver
+    build:
+      context: .
+      dockerfile: src/SsoServer/Dockerfile
+    ports:
+      - "1080:80"
+      - "1443:443"

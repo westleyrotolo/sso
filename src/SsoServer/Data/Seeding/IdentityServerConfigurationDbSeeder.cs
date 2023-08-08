@@ -9,7 +9,7 @@ namespace SsoServer.Data.Seeding
 {
     public static class IdentityServerConfigurationDbSeeder
     {
-        private static readonly string FarmlandWebApi = "farmlandwebapi";
+        private static readonly string QEApi = nameof(QEApi);
 
         public static IEnumerable<IdentityResource> IdentityResourcesToSeed =>
             new IdentityResource[]
@@ -25,7 +25,7 @@ namespace SsoServer.Data.Seeding
                 new ApiScope("api2", displayName: "API 2"),
                 // API endpoints in the same application hosting IdentityServer
                 new ApiScope(IdentityServerConstants.LocalApi.ScopeName, displayName: IdentityServerConstants.LocalApi.ScopeName),
-                new ApiScope(FarmlandWebApi, displayName: "Farmland Web API"),
+                new ApiScope(QEApi, displayName: "Farmland Web API"),
             };
 
         public static IEnumerable<Client> ClientsToSeed =>
@@ -34,33 +34,32 @@ namespace SsoServer.Data.Seeding
                 // Merchant
                 new Client
                 {
-                    // The ID badge
-                    ClientId = "merchant",
-                    ClientName = "Merchant Client",
-                    // Defines the merchant has to use client credentials flow
+                    ClientId = "rutino",
+                    ClientName = "Comune di Rutino",
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     // Secret code
                     ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
 
-                    AllowedScopes = { 
-                        // Grant access to the farmland web API
-                        FarmlandWebApi
+                    AllowedScopes = {
+                        "api1",
+                        "api2",
+                        QEApi
                     }
                 },
                 // interactive client using code flow + pkce
                 new Client
                 {
-                    ClientId = "interactive.client1",
-                    ClientName = "Sample Interactive Client",
+                    ClientId = "interactive.client",
+                    ClientName = "Interactive Client",
                     ClientSecrets = { new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256()) },
 
                     AllowedGrantTypes = GrantTypes.Code,
 
                     // where to redirect to after login
-                    RedirectUris = { "https://localhost:5002/signin-oidc" },
-                    FrontChannelLogoutUri = "https://localhost:5002/signout-oidc",
+                    RedirectUris = { "https://auth.westley.it/signin-oidc" },
+                    FrontChannelLogoutUri = "https://auth.westley.it/signout-oidc",
                     // where to redirect to after logout
-                    PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                    PostLogoutRedirectUris = { "https://auth.westley.it/signout-callback-oidc" },
 
                     // In order to support refresh token, offline access is required.
                     AllowOfflineAccess = true,
@@ -71,7 +70,7 @@ namespace SsoServer.Data.Seeding
                         "api2",
                         // Access to local API in the same application hosting SSO server
                         IdentityServerConstants.LocalApi.ScopeName,
-                        FarmlandWebApi
+                        QEApi
                     },
                 }
             };

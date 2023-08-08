@@ -1,4 +1,4 @@
-﻿using IdentityModel;
+﻿    using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -42,8 +42,10 @@ namespace SsoServer.Data.Seeding
         private static void SeedRoles(RoleManager<IdentityRole> roleManager)
         {
             TryAddRole(roleManager, UserRoles.Administrator);
-            TryAddRole(roleManager, UserRoles.Finance);
-            
+            TryAddRole(roleManager, UserRoles.SuperAdministrator);
+            TryAddRole(roleManager, UserRoles.Editor);
+            TryAddRole(roleManager, UserRoles.Viewer);
+
         }
 
         /// <summary>
@@ -71,7 +73,7 @@ namespace SsoServer.Data.Seeding
         private static void SeedUsers(UserManager<ApplicationUser> userManager)
         {
 
-            TryAddUser(userManager, "admin@test.ca", "Password123$", "admin@test.ca", "Admin", "Test", new string[] { Constants.UserRoles.Administrator});
+            TryAddUser(userManager, "admin@rubrik.it", ".admin.", "admin@rubrik.it", "Admin", "Test", new string[] { Constants.UserRoles.Administrator});
 
             // Seed more users here.
         }
