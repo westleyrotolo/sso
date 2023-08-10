@@ -28,62 +28,56 @@ namespace SsoServer.Data.Seeding
                 new ApiScope(QEApi, displayName: "Farmland Web API"),
             };
 
-        public static IEnumerable<Client> ClientsToSeed =>
+        private static IEnumerable<Client> ClientsToSeed =>
             new Client[]
             {
-                new Client
+                new()
                 {
                     ClientId = "rutino",
                     ClientName = "Comune Di Rutino",
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
-                    Claims = new List<ClientClaim>
-                    {
-                        new ClientClaim("client_id", "rutino")
-                    },
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     // Secret code
-                    ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
-                    AllowedScopes = {
+                    AllowedScopes =
+                    {
                         "api1",
                         "api2",
                         QEApi
-                    }
+                    },
+                    
+                    RequireClientSecret = true,
+                    ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
                 },
-                new Client
+                new()
                 {
                     ClientId = "torchiara",
                     ClientName = "Comune Di Torchiara",
-                    Claims = new List<ClientClaim>
-                    {
-                        new ClientClaim("client_id", "torchiara")
-                    },
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     // Secret code
                     ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
                     AllowedScopes = {
                         "api1",
                         "api2",
                         QEApi
-                    }
+                    },
+                    RequireClientSecret = true
                 },
-                new Client
+                new()
                 {
                     ClientId = "lustra",
-                    Claims = new List<ClientClaim>
-                    {
-                        new ClientClaim("client_id", "lustra")
-                    },
                     ClientName = "Comune Di Lustra",
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     // Secret code
-                    ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69B".Sha256()) },
+                    ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
                     AllowedScopes = {
                         "api1",
                         "api2",
-                        QEApi
-                    }
+                        QEApi,
+                    },
+                    
+                    RequireClientSecret = true
                 },
                 // interactive client using code flow + pkce
-                new Client
+                new()
                 {
                     ClientId = "interactive.client",
                     ClientName = "Interactive Client",

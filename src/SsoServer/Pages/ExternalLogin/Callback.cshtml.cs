@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SsoServer.Models;
 using System.Security.Claims;
+using SsoServer.Models.Users;
 
 namespace SsoServer.Pages.ExternalLogin
 {

@@ -5,8 +5,9 @@ using Serilog;
 using SsoServer.Constants;
 using SsoServer.Models;
 using System.Security.Claims;
+    using SsoServer.Models.Users;
 
-namespace SsoServer.Data.Seeding
+    namespace SsoServer.Data.Seeding
 {
     public static class AspNetCoreIdentitySeeder
     {
@@ -17,22 +18,19 @@ namespace SsoServer.Data.Seeding
         /// <param name="autoMigrateDatabase"></param>
         public static void EnsureAspNetCoreIdentityDatabaseIsSeeded(this IApplicationBuilder builder, bool autoMigrateDatabase)
         {
-            using (var serviceScope = builder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            using var serviceScope = builder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+
+            if (autoMigrateDatabase)
             {
-                var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
-
-                if (autoMigrateDatabase)
-                {
-                    dbContext.Database.Migrate();
-                }
-
-                var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
-                SeedRoles(roleManager);
-
-                var userManager = serviceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
-                SeedUsers(userManager);
-
+                dbContext.Database.Migrate();
             }
+
+            var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+            SeedRoles(roleManager);
+
+            var userManager = serviceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+            SeedUsers(userManager);
         }
 
         /// <summary>
@@ -43,8 +41,7 @@ namespace SsoServer.Data.Seeding
         {
             TryAddRole(roleManager, UserRoles.Administrator);
             TryAddRole(roleManager, UserRoles.SuperAdministrator);
-            TryAddRole(roleManager, UserRoles.Editor);
-            TryAddRole(roleManager, UserRoles.Viewer);
+            TryAddRole(roleManager, UserRoles.User);
 
         }
 
@@ -73,8 +70,8 @@ namespace SsoServer.Data.Seeding
         private static void SeedUsers(UserManager<ApplicationUser> userManager)
         {
 
-            TryAddUser(userManager, "admin@rubrik.it", ".admin.", "admin@rubrik.it", "Admin", "Test", new string[] { Constants.UserRoles.Administrator});
-
+            TryAddUser(userManager, "admin@rubrik.it", ".admin.", "admin@rubrik.it", "Admin", "Test", new string[] { Constants.UserRoles.SuperAdministrator});
+            
             // Seed more users here.
         }
 
@@ -87,10 +84,12 @@ namespace SsoServer.Data.Seeding
             if (userManager.FindByNameAsync(username).Result == null)
             {
                 // Build the user (ASP.NET Core Identity User)
-                ApplicationUser user = new ApplicationUser();
-                user.UserName = username;
-                user.Email = email;
-                user.EmailConfirmed = true;
+                ApplicationUser user = new()
+                {
+                    UserName = username,
+                    Email = email,
+                    EmailConfirmed = true
+                };
                 // Create user
                 IdentityResult result = userManager.CreateAsync(user, password).Result;
 
@@ -110,10 +109,10 @@ namespace SsoServer.Data.Seeding
                     // Add user claims
                     result = userManager.AddClaimsAsync(user, new Claim[]
                         {
-                            new Claim(JwtClaimTypes.GivenName, firstname),
-                            new Claim(JwtClaimTypes.FamilyName, lastname),
-                            new Claim(JwtClaimTypes.ClientId, "rutino"),
-                            new Claim(JwtClaimTypes.ClientId, "torchiara"),
+                            new(JwtClaimTypes.GivenName, firstname),
+                            new(JwtClaimTypes.FamilyName, lastname),
+                            new(JwtClaimTypes.ClientId, "rutino"),
+                            new(JwtClaimTypes.ClientId, "torchiara"),
                         }).Result;
 
                     if (!result.Succeeded)

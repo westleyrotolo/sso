@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SsoServer.Models;
+using SsoServer.Models.Users;
 
 namespace SsoServer.Data
 {

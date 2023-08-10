@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using SsoServer.Models;
 using System.ComponentModel.DataAnnotations;
+using SsoServer.Models.Users;
 
 namespace SsoServer.Features.User
 {

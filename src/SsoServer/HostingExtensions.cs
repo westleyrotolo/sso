@@ -9,6 +9,11 @@ using SsoServer.Data;
 using SsoServer.Data.Seeding;
 using SsoServer.Models;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
+using SsoServer.Infrastructures;
+using SsoServer.Models.Users;
+using SsoServer.Services;
 
 namespace SsoServer
 {
@@ -32,6 +37,7 @@ namespace SsoServer
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(opt =>
             {
+
                 opt.Password.RequireDigit = false;
                 opt.Password.RequiredLength = 3;
                 opt.Password.RequiredUniqueChars = 1;
@@ -46,7 +52,7 @@ namespace SsoServer
             builder.Services
                 .AddIdentityServer(options =>
                 {
-                    options.IssuerUri = "https://auth.westley.it";
+                    options.IssuerUri = "https://localhost:5001";
                     options.Events.RaiseErrorEvents = true;
                     options.Events.RaiseInformationEvents = true;
                     options.Events.RaiseFailureEvents = true;
@@ -65,18 +71,21 @@ namespace SsoServer
                     options.ConfigureDbContext = b => b.UseSqlite(dbConnectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
                 // Adds the integration layer to allow IdentityServer to access the user data for the ASP.NET Core Identity user database (configured above). This is needed when IdentityServer must add claims for the users into tokens.
-                .AddAspNetIdentity<ApplicationUser>();
-
-            builder.Services.AddAuthentication()
-                .AddGoogle(options =>
+                .AddAspNetIdentity<ApplicationUser>()
+                .AddProfileService<IdentityClaimsProfileService>();
+            
+            
+            builder.Services
+                .AddAuthentication(option =>
+            {
+                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(option =>
                 {
-                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-
-                    // register your IdentityServer with Google at https://console.developers.google.com
-                    // enable the Google+ API
-                    // set the redirect URI to https://localhost:5001/signin-google
-                    options.ClientId = "copy client ID from Google here";
-                    options.ClientSecret = "copy client secret from Google here";
+                    option.Authority = "https://localhost:5001";
+                    option.Audience = "api1";
+                    option.TokenValidationParameters.ValidateAudience = false;
                 });
 
             // Enable token validation for local APIs
@@ -86,7 +95,38 @@ namespace SsoServer
             builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
             // Swagger for User API
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(setup =>
+                {
+                    // Include 'SecurityScheme' to use JWT Authentication
+                    var jwtSecurityScheme = new OpenApiSecurityScheme
+                    {
+                        BearerFormat = "JWT",
+                        Name = "JWT Authentication",
+                        In = ParameterLocation.Header,
+                        Type = SecuritySchemeType.Http,
+                        Scheme = JwtBearerDefaults.AuthenticationScheme,
+                        Description = "Put **_ONLY_** your JWT Bearer token on textbox below!",
+
+                        Reference = new OpenApiReference
+                        {
+                            Id = JwtBearerDefaults.AuthenticationScheme,
+                            Type = ReferenceType.SecurityScheme
+                        }
+                    };
+
+                    setup.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+
+                    setup.AddSecurityRequirement(new OpenApiSecurityRequirement
+                    {
+                        { jwtSecurityScheme, Array.Empty<string>() }
+                    });
+
+                });
+            builder.Services.AddTransient<IUserService, UserService>();
+            builder.Services.AddTransient<IClientService, ClientService>();
+            builder.Services.AddAutoMapper(typeof(HostingExtensions));
+
+
 
             return builder.Build();
         }
@@ -112,6 +152,8 @@ namespace SsoServer
 
                 // Swagger UI for development
                 app.UseSwagger();
+                
+
                 app.UseSwaggerUI();
             }
 
@@ -119,6 +161,7 @@ namespace SsoServer
             app.UseRouting();
 
             app.UseIdentityServer();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapRazorPages()
