@@ -52,7 +52,7 @@ namespace SsoServer
             builder.Services
                 .AddIdentityServer(options =>
                 {
-                    options.IssuerUri = "https://localhost:5001";
+                    options.IssuerUri = "https://auth.westley.it";
                     options.Events.RaiseErrorEvents = true;
                     options.Events.RaiseInformationEvents = true;
                     options.Events.RaiseFailureEvents = true;
@@ -83,7 +83,7 @@ namespace SsoServer
             })
                 .AddJwtBearer(option =>
                 {
-                    option.Authority = "https://localhost:5001";
+                    option.Authority = "https://auth.westley.it";
                     option.Audience = "api1";
                     option.TokenValidationParameters.ValidateAudience = false;
                 });
