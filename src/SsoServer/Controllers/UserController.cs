@@ -1,5 +1,7 @@
 using AutoMapper;
 using Duende.IdentityServer.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SsoServer.Dtos.User;
@@ -10,6 +12,7 @@ using SsoServer.Services;
 
 namespace SsoServer.Controllers;
 
+[Authorize(Roles = $"{Constants.UserRoles.SuperAdministrator}, {Constants.UserRoles.SuperAdministrator}", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class UserController : BaseController
 {
     private readonly IMapper _mapper;
@@ -65,13 +68,13 @@ public class UserController : BaseController
         return Ok();
     }
 
-    [HttpPost("associate/{userName}/{clientId}")]
+    [HttpGet("associate/{userName}/{clientId}")]
     public async Task<IActionResult> AssociateUserClientAsync([FromRoute] string userName, [FromRoute] string clientId)
     {
         await _userService.AssociateUserToClientId(userName, clientId);
         return Ok();
     }
-    [HttpPost("dissociate/{userName}/{clientId}")]
+    [HttpGet("dissociate/{userName}/{clientId}")]
     public async Task<IActionResult> DissociateUserClientAsync([FromRoute] string userName, [FromRoute] string clientId)
     {
         await _userService.RemoveUserFromClientAsync(userName, clientId);

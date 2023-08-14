@@ -86,6 +86,8 @@ namespace SsoServer
                     option.Authority = "https://auth.westley.it";
                     option.Audience = "api1";
                     option.TokenValidationParameters.ValidateAudience = false;
+                    option.TokenValidationParameters.ValidateIssuer = false;
+                    option.TokenValidationParameters.ValidateIssuerSigningKey = false;
                 });
 
             // Enable token validation for local APIs

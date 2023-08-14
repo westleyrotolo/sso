@@ -28,7 +28,7 @@ builder.Services.AddAuthorization(options =>
         // Requires the user to be authenticated
         policy.RequireAuthenticatedUser();
         // Requires the user to have access to the farmland web api.
-        policy.RequireClaim("scope", "farmlandwebapi");
+        policy.RequireClaim("scope", "api1");
     });
 });
 
