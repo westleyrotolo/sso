@@ -3,70 +3,89 @@ using System;
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
+namespace SsoServer.Migrations.ConfigurationDb
 {
     [DbContext(typeof(ConfigurationDbContext))]
-    [Migration("20230123031624_InitialIdentityServerConfigurationDb")]
-    partial class InitialIdentityServerConfigurationDb
+    partial class ConfigurationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "6.0.21")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResource", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AllowedAccessTokenSigningAlgorithms")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("allowed_access_token_signing_algorithms");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("display_name");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("enabled");
 
                     b.Property<DateTime?>("LastAccessed")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_accessed");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
 
                     b.Property<bool>("NonEditable")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("non_editable");
 
                     b.Property<bool>("RequireResourceIndicator")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("require_resource_indicator");
 
                     b.Property<bool>("ShowInDiscoveryDocument")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("show_in_discovery_document");
 
                     b.Property<DateTime?>("Updated")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_api_resources");
 
                     b.HasIndex("Name")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_api_resources_name");
 
                     b.ToTable("ApiResources", (string)null);
                 });
@@ -75,20 +94,27 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ApiResourceId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("api_resource_id");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("type");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_api_resource_claims");
 
                     b.HasIndex("ApiResourceId", "Type")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_api_resource_claims_api_resource_id_type");
 
                     b.ToTable("ApiResourceClaims", (string)null);
                 });
@@ -97,25 +123,33 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ApiResourceId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("api_resource_id");
 
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("key");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_api_resource_properties");
 
                     b.HasIndex("ApiResourceId", "Key")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_api_resource_properties_api_resource_id_key");
 
                     b.ToTable("ApiResourceProperties", (string)null);
                 });
@@ -124,20 +158,27 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ApiResourceId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("api_resource_id");
 
                     b.Property<string>("Scope")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("scope");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_api_resource_scopes");
 
                     b.HasIndex("ApiResourceId", "Scope")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_api_resource_scopes_api_resource_id_scope");
 
                     b.ToTable("ApiResourceScopes", (string)null);
                 });
@@ -146,34 +187,45 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ApiResourceId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("api_resource_id");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
 
                     b.Property<DateTime?>("Expiration")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expiration");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("type");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(4000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(4000)")
+                        .HasColumnName("value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_api_resource_secrets");
 
-                    b.HasIndex("ApiResourceId");
+                    b.HasIndex("ApiResourceId")
+                        .HasDatabaseName("ix_api_resource_secrets_api_resource_id");
 
                     b.ToTable("ApiResourceSecrets", (string)null);
                 });
@@ -182,49 +234,65 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("display_name");
 
                     b.Property<bool>("Emphasize")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("emphasize");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("enabled");
 
                     b.Property<DateTime?>("LastAccessed")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_accessed");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
 
                     b.Property<bool>("NonEditable")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("non_editable");
 
                     b.Property<bool>("Required")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("required");
 
                     b.Property<bool>("ShowInDiscoveryDocument")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("show_in_discovery_document");
 
                     b.Property<DateTime?>("Updated")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_api_scopes");
 
                     b.HasIndex("Name")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_api_scopes_name");
 
                     b.ToTable("ApiScopes", (string)null);
                 });
@@ -233,20 +301,27 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ScopeId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("scope_id");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("type");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_api_scope_claims");
 
                     b.HasIndex("ScopeId", "Type")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_api_scope_claims_scope_id_type");
 
                     b.ToTable("ApiScopeClaims", (string)null);
                 });
@@ -255,25 +330,33 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("key");
 
                     b.Property<int>("ScopeId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("scope_id");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_api_scope_properties");
 
                     b.HasIndex("ScopeId", "Key")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_api_scope_properties_scope_id_key");
 
                     b.ToTable("ApiScopeProperties", (string)null);
                 });
@@ -282,164 +365,215 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AbsoluteRefreshTokenLifetime")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("absolute_refresh_token_lifetime");
 
                     b.Property<int>("AccessTokenLifetime")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("access_token_lifetime");
 
                     b.Property<int>("AccessTokenType")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("access_token_type");
 
                     b.Property<bool>("AllowAccessTokensViaBrowser")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("allow_access_tokens_via_browser");
 
                     b.Property<bool>("AllowOfflineAccess")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("allow_offline_access");
 
                     b.Property<bool>("AllowPlainTextPkce")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("allow_plain_text_pkce");
 
                     b.Property<bool>("AllowRememberConsent")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("allow_remember_consent");
 
                     b.Property<string>("AllowedIdentityTokenSigningAlgorithms")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("allowed_identity_token_signing_algorithms");
 
                     b.Property<bool>("AlwaysIncludeUserClaimsInIdToken")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("always_include_user_claims_in_id_token");
 
                     b.Property<bool>("AlwaysSendClientClaims")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("always_send_client_claims");
 
                     b.Property<int>("AuthorizationCodeLifetime")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("authorization_code_lifetime");
 
                     b.Property<bool>("BackChannelLogoutSessionRequired")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("back_channel_logout_session_required");
 
                     b.Property<string>("BackChannelLogoutUri")
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("back_channel_logout_uri");
 
                     b.Property<int?>("CibaLifetime")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("ciba_lifetime");
 
                     b.Property<string>("ClientClaimsPrefix")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("client_claims_prefix");
 
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("client_id");
 
                     b.Property<string>("ClientName")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("client_name");
 
                     b.Property<string>("ClientUri")
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("client_uri");
 
                     b.Property<int?>("ConsentLifetime")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("consent_lifetime");
 
                     b.Property<bool?>("CoordinateLifetimeWithUserSession")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("coordinate_lifetime_with_user_session");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
 
                     b.Property<int>("DeviceCodeLifetime")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("device_code_lifetime");
 
                     b.Property<bool>("EnableLocalLogin")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("enable_local_login");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("enabled");
 
                     b.Property<bool>("FrontChannelLogoutSessionRequired")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("front_channel_logout_session_required");
 
                     b.Property<string>("FrontChannelLogoutUri")
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("front_channel_logout_uri");
 
                     b.Property<int>("IdentityTokenLifetime")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("identity_token_lifetime");
 
                     b.Property<bool>("IncludeJwtId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("include_jwt_id");
 
                     b.Property<DateTime?>("LastAccessed")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_accessed");
 
                     b.Property<string>("LogoUri")
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("logo_uri");
 
                     b.Property<bool>("NonEditable")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("non_editable");
 
                     b.Property<string>("PairWiseSubjectSalt")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("pair_wise_subject_salt");
 
                     b.Property<int?>("PollingInterval")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("polling_interval");
 
                     b.Property<string>("ProtocolType")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("protocol_type");
 
                     b.Property<int>("RefreshTokenExpiration")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("refresh_token_expiration");
 
                     b.Property<int>("RefreshTokenUsage")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("refresh_token_usage");
 
                     b.Property<bool>("RequireClientSecret")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("require_client_secret");
 
                     b.Property<bool>("RequireConsent")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("require_consent");
 
                     b.Property<bool>("RequirePkce")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("require_pkce");
 
                     b.Property<bool>("RequireRequestObject")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("require_request_object");
 
                     b.Property<int>("SlidingRefreshTokenLifetime")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("sliding_refresh_token_lifetime");
 
                     b.Property<bool>("UpdateAccessTokenClaimsOnRefresh")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("update_access_token_claims_on_refresh");
 
                     b.Property<DateTime?>("Updated")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated");
 
                     b.Property<string>("UserCodeType")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("user_code_type");
 
                     b.Property<int?>("UserSsoLifetime")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("user_sso_lifetime");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_clients");
 
                     b.HasIndex("ClientId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_clients_client_id");
 
                     b.ToTable("Clients", (string)null);
                 });
@@ -448,25 +582,33 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("client_id");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("type");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_client_claims");
 
                     b.HasIndex("ClientId", "Type", "Value")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_client_claims_client_id_type_value");
 
                     b.ToTable("ClientClaims", (string)null);
                 });
@@ -475,20 +617,27 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("client_id");
 
                     b.Property<string>("Origin")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("origin");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_client_cors_origins");
 
                     b.HasIndex("ClientId", "Origin")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_client_cors_origins_client_id_origin");
 
                     b.ToTable("ClientCorsOrigins", (string)null);
                 });
@@ -497,20 +646,27 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("client_id");
 
                     b.Property<string>("GrantType")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("grant_type");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_client_grant_types");
 
                     b.HasIndex("ClientId", "GrantType")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_client_grant_types_client_id_grant_type");
 
                     b.ToTable("ClientGrantTypes", (string)null);
                 });
@@ -519,20 +675,27 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("client_id");
 
                     b.Property<string>("Provider")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("provider");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_client_id_p_restrictions");
 
                     b.HasIndex("ClientId", "Provider")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_client_id_p_restrictions_client_id_provider");
 
                     b.ToTable("ClientIdPRestrictions", (string)null);
                 });
@@ -541,20 +704,27 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("client_id");
 
                     b.Property<string>("PostLogoutRedirectUri")
                         .IsRequired()
                         .HasMaxLength(400)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(400)")
+                        .HasColumnName("post_logout_redirect_uri");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_client_post_logout_redirect_uris");
 
                     b.HasIndex("ClientId", "PostLogoutRedirectUri")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_client_post_logout_redirect_uris_client_id_post_logout_redirect");
 
                     b.ToTable("ClientPostLogoutRedirectUris", (string)null);
                 });
@@ -563,25 +733,33 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("client_id");
 
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("key");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_client_properties");
 
                     b.HasIndex("ClientId", "Key")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_client_properties_client_id_key");
 
                     b.ToTable("ClientProperties", (string)null);
                 });
@@ -590,20 +768,27 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("client_id");
 
                     b.Property<string>("RedirectUri")
                         .IsRequired()
                         .HasMaxLength(400)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(400)")
+                        .HasColumnName("redirect_uri");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_client_redirect_uris");
 
                     b.HasIndex("ClientId", "RedirectUri")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_client_redirect_uris_client_id_redirect_uri");
 
                     b.ToTable("ClientRedirectUris", (string)null);
                 });
@@ -612,20 +797,27 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("client_id");
 
                     b.Property<string>("Scope")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("scope");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_client_scopes");
 
                     b.HasIndex("ClientId", "Scope")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_client_scopes_client_id_scope");
 
                     b.ToTable("ClientScopes", (string)null);
                 });
@@ -634,34 +826,45 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("client_id");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("Description")
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("description");
 
                     b.Property<DateTime?>("Expiration")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expiration");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("type");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(4000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(4000)")
+                        .HasColumnName("value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_client_secrets");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("ClientId")
+                        .HasDatabaseName("ix_client_secrets_client_id");
 
                     b.ToTable("ClientSecrets", (string)null);
                 });
@@ -670,44 +873,58 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("display_name");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("enabled");
 
                     b.Property<DateTime?>("LastAccessed")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_accessed");
 
                     b.Property<bool>("NonEditable")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("non_editable");
 
                     b.Property<string>("Properties")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text")
+                        .HasColumnName("properties");
 
                     b.Property<string>("Scheme")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("scheme");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("type");
 
                     b.Property<DateTime?>("Updated")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_identity_providers");
 
                     b.HasIndex("Scheme")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_identity_providers_scheme");
 
                     b.ToTable("IdentityProviders", (string)null);
                 });
@@ -716,46 +933,61 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("display_name");
 
                     b.Property<bool>("Emphasize")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("emphasize");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("enabled");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
 
                     b.Property<bool>("NonEditable")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("non_editable");
 
                     b.Property<bool>("Required")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("required");
 
                     b.Property<bool>("ShowInDiscoveryDocument")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean")
+                        .HasColumnName("show_in_discovery_document");
 
                     b.Property<DateTime?>("Updated")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_identity_resources");
 
                     b.HasIndex("Name")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_identity_resources_name");
 
                     b.ToTable("IdentityResources", (string)null);
                 });
@@ -764,20 +996,27 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("IdentityResourceId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("identity_resource_id");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("type");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_identity_resource_claims");
 
                     b.HasIndex("IdentityResourceId", "Type")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_identity_resource_claims_identity_resource_id_type");
 
                     b.ToTable("IdentityResourceClaims", (string)null);
                 });
@@ -786,25 +1025,33 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("IdentityResourceId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasColumnName("identity_resource_id");
 
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("key");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_identity_resource_properties");
 
                     b.HasIndex("IdentityResourceId", "Key")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_identity_resource_properties_identity_resource_id_key");
 
                     b.ToTable("IdentityResourceProperties", (string)null);
                 });
@@ -815,7 +1062,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("UserClaims")
                         .HasForeignKey("ApiResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_api_resource_claims_api_resources_api_resource_id");
 
                     b.Navigation("ApiResource");
                 });
@@ -826,7 +1074,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("Properties")
                         .HasForeignKey("ApiResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_api_resource_properties_api_resources_api_resource_id");
 
                     b.Navigation("ApiResource");
                 });
@@ -837,7 +1086,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("Scopes")
                         .HasForeignKey("ApiResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_api_resource_scopes_api_resources_api_resource_id");
 
                     b.Navigation("ApiResource");
                 });
@@ -848,7 +1098,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("Secrets")
                         .HasForeignKey("ApiResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_api_resource_secrets_api_resources_api_resource_id");
 
                     b.Navigation("ApiResource");
                 });
@@ -859,7 +1110,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("UserClaims")
                         .HasForeignKey("ScopeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_api_scope_claims_api_scopes_scope_id");
 
                     b.Navigation("Scope");
                 });
@@ -870,7 +1122,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("Properties")
                         .HasForeignKey("ScopeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_api_scope_properties_api_scopes_scope_id");
 
                     b.Navigation("Scope");
                 });
@@ -881,7 +1134,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("Claims")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_client_claims_clients_client_id");
 
                     b.Navigation("Client");
                 });
@@ -892,7 +1146,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("AllowedCorsOrigins")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_client_cors_origins_clients_client_id");
 
                     b.Navigation("Client");
                 });
@@ -903,7 +1158,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("AllowedGrantTypes")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_client_grant_types_clients_client_id");
 
                     b.Navigation("Client");
                 });
@@ -914,7 +1170,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("IdentityProviderRestrictions")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_client_id_p_restrictions_clients_client_id");
 
                     b.Navigation("Client");
                 });
@@ -925,7 +1182,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("PostLogoutRedirectUris")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_client_post_logout_redirect_uris_clients_client_id");
 
                     b.Navigation("Client");
                 });
@@ -936,7 +1194,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("Properties")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_client_properties_clients_client_id");
 
                     b.Navigation("Client");
                 });
@@ -947,7 +1206,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("RedirectUris")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_client_redirect_uris_clients_client_id");
 
                     b.Navigation("Client");
                 });
@@ -958,7 +1218,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("AllowedScopes")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_client_scopes_clients_client_id");
 
                     b.Navigation("Client");
                 });
@@ -969,7 +1230,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("ClientSecrets")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_client_secrets_clients_client_id");
 
                     b.Navigation("Client");
                 });
@@ -980,7 +1242,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("UserClaims")
                         .HasForeignKey("IdentityResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_identity_resource_claims_identity_resources_identity_resource_");
 
                     b.Navigation("IdentityResource");
                 });
@@ -991,7 +1254,8 @@ namespace SsoServer.Data.Migrations.IdentityServer.ConfigurationDb
                         .WithMany("Properties")
                         .HasForeignKey("IdentityResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_identity_resource_properties_identity_resources_identity_resou");
 
                     b.Navigation("IdentityResource");
                 });

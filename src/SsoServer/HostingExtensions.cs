@@ -74,12 +74,26 @@ namespace SsoServer
                 // Store configuration data: resources and clients, etc.
                 .AddConfigurationStore(options => 
                 {
-                    options.ConfigureDbContext = b => b.UseSqlite(dbConnectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                    options.ConfigureDbContext = b => b.UseNpgsql(dbConnectionString, npgsqlOptionsAction: sqlOptions =>
+                    {
+                        sqlOptions.EnableRetryOnFailure(
+                                maxRetryCount: 3,
+                                maxRetryDelay: TimeSpan.FromSeconds(Math.Pow(2, 3)),
+                                errorCodesToAdd: null);
+                        sqlOptions.MigrationsAssembly(migrationsAssembly);
+                    }).UseSnakeCaseNamingConvention(CultureInfo.InvariantCulture);
                 })
                 // Store operational data that IdentityServer produces: tokens, codes, and consents, etc.
                 .AddOperationalStore(options => 
                 {
-                    options.ConfigureDbContext = b => b.UseSqlite(dbConnectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                    options.ConfigureDbContext = b => b.UseNpgsql(dbConnectionString, npgsqlOptionsAction: sqlOptions =>
+                    {
+                        sqlOptions.EnableRetryOnFailure(
+                                maxRetryCount: 3,
+                                maxRetryDelay: TimeSpan.FromSeconds(Math.Pow(2, 3)),
+                                errorCodesToAdd: null);
+                        sqlOptions.MigrationsAssembly(migrationsAssembly);
+                    }).UseSnakeCaseNamingConvention(CultureInfo.InvariantCulture);
                 })
                 // Adds the integration layer to allow IdentityServer to access the user data for the ASP.NET Core Identity user database (configured above). This is needed when IdentityServer must add claims for the users into tokens.
                 .AddAspNetIdentity<ApplicationUser>()
