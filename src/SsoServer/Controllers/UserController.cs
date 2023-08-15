@@ -35,6 +35,24 @@ public class UserController : BaseController
             await _userService.AssociateUserToClientId(user.UserName, clientId);
         return Ok();
     }
+    [HttpPost("bulk")]
+    public async Task<IActionResult> CreateUsersIfNotExists([FromBody]UserListDto userListSubmitDto)
+    {
+        foreach (var userItem in userListSubmitDto.Users)
+        {
+            var u = new ApplicationUser
+            {
+                UserName = userItem.UserName,
+                Email = userItem.UserName
+            };
+            var roles = userItem.Roles?.ToArray();
+            if (roles.IsNullOrEmpty()) roles = new string[] { Constants.UserRoles.User };
+            await _userService.AddUserAsync(u, string.Empty, roles);
+            if (!userListSubmitDto.ClientId.IsNullOrEmpty())
+                await _userService.AssociateUserToClientId(u.UserName, userListSubmitDto.ClientId);
+        }
+        return Ok();
+    }
     [HttpPut]
     public async Task<IActionResult> UpdateUserAsync([FromBody] UserSubmitDto userSubmitDto)
     {

@@ -22,6 +22,8 @@ public class UserService : IUserService
 
     public async Task<ApplicationUser> AddUserAsync(ApplicationUser user, string password, params string[] roles)
     {
+        var u = await _userManager.FindByNameAsync(user.UserName);
+        if (u != null) return u;
         await _userManager.CreateAsync(user).ManageIdentityResultAsync();
         if (!password.IsNullOrEmpty())
             await _userManager.AddPasswordAsync(user, password);
