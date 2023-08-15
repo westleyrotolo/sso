@@ -18,7 +18,7 @@ namespace SsoServer.Data.Seeding
 
                 if (autoMigrateDatabase)
                 {
-                    dbContext.Database.Migrate();
+                   // dbContext.Database.Migrate();
                 }
 
                 // This is mostly operational data, so no seeding required.

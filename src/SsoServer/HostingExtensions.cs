@@ -41,8 +41,7 @@ namespace SsoServer
                             maxRetryCount: 3,
                             maxRetryDelay: TimeSpan.FromSeconds(Math.Pow(2, 3)),
                             errorCodesToAdd: null);
-                })
-                .UseSnakeCaseNamingConvention(CultureInfo.InvariantCulture);
+                });
 
             }, ServiceLifetime.Transient);
 
@@ -81,7 +80,7 @@ namespace SsoServer
                                 maxRetryDelay: TimeSpan.FromSeconds(Math.Pow(2, 3)),
                                 errorCodesToAdd: null);
                         sqlOptions.MigrationsAssembly(migrationsAssembly);
-                    }).UseSnakeCaseNamingConvention(CultureInfo.InvariantCulture);
+                    });
                 })
                 // Store operational data that IdentityServer produces: tokens, codes, and consents, etc.
                 .AddOperationalStore(options => 
@@ -93,7 +92,7 @@ namespace SsoServer
                                 maxRetryDelay: TimeSpan.FromSeconds(Math.Pow(2, 3)),
                                 errorCodesToAdd: null);
                         sqlOptions.MigrationsAssembly(migrationsAssembly);
-                    }).UseSnakeCaseNamingConvention(CultureInfo.InvariantCulture);
+                    });
                 })
                 // Adds the integration layer to allow IdentityServer to access the user data for the ASP.NET Core Identity user database (configured above). This is needed when IdentityServer must add claims for the users into tokens.
                 .AddAspNetIdentity<ApplicationUser>()

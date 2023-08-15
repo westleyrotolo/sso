@@ -116,7 +116,7 @@ namespace SsoServer.Data.Seeding
 
                 if (autoMigrateDatabase)
                 {
-                    dbContext.Database.Migrate();
+                   // dbContext.Database.Migrate();
                 }
 
                 // An identity resource is a named group of claims about a user that can be requested using the scope parameter.
