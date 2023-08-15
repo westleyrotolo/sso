@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using SsoServer.Infrastructures;
 using SsoServer.Models.Users;
 using SsoServer.Services;
+using System.Globalization;
 
 namespace SsoServer
 {
@@ -31,9 +32,19 @@ namespace SsoServer
             var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
             string dbConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-            // ASP.NET Core Identity 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(dbConnectionString));
+            {
+                var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+                options.UseNpgsql(connectionString, npgsqlOptionsAction: sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 3,
+                            maxRetryDelay: TimeSpan.FromSeconds(Math.Pow(2, 3)),
+                            errorCodesToAdd: null);
+                })
+                .UseSnakeCaseNamingConvention(CultureInfo.InvariantCulture);
+
+            }, ServiceLifetime.Transient);
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(opt =>
             {
