@@ -101,7 +101,7 @@ namespace SsoServer
             
             
             builder.Services
-                .AddAuthentication(option =>
+                .AddAuthentication(option =>    
             {
                 option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;

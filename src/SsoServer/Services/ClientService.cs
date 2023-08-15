@@ -33,7 +33,8 @@ public class ClientService : IClientService
 
     public async Task<Client> GetByIdAsync(string clientId)
     {
-        var client = await _configurationDbContext.Clients.FindAsync(clientId);
+        var client = await _configurationDbContext.Clients.Where(x => x.ClientId == clientId).FirstAsync();
+
         return client.ToModel();
     }
 

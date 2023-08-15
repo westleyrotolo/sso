@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SsoServer.Dtos.Client;
+using SsoServer.Dtos.User;
 using SsoServer.Services;
 
 namespace SsoServer.Controllers;
@@ -13,11 +14,16 @@ public class ClientController : BaseController
 {
     private readonly IMapper _mapper;
     private readonly IClientService _clientService;
+    private readonly IUserService _userService;
 
-    public ClientController(IMapper mapper, IClientService clientService)
+    public ClientController(
+        IMapper mapper,
+        IClientService clientService,
+        IUserService userService)
     {
         _mapper = mapper;
         _clientService = clientService;
+        _userService = userService;
     }
 
     [HttpPost("")]
@@ -47,6 +53,13 @@ public class ClientController : BaseController
     public async Task<IActionResult> GetByIdAsync([FromRoute] string clientId)
     {
         var client = await _clientService.GetByIdAsync(clientId);
-        return Ok(_mapper.Map<ClientDto>(client));
+        var users = await _userService.GetAllUserByClientIdAsync(clientId);
+        var clientDto = _mapper.Map<ClientDto>(client);
+        if (users != null && users.Count > 0)
+        {
+            var usersDto = users.Select(x => _mapper.Map<UserBaseDto>(x));
+            clientDto.Users = usersDto.ToList();
+        }
+        return Ok(_mapper.Map<ClientDto>(clientDto));
     }
 }
