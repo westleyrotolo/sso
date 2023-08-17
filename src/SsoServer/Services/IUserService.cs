@@ -13,4 +13,7 @@ public interface IUserService
     Task DeleteUserAsync(string userName);
     Task AssociateUserToClientId(string userName, string clientId);
     Task RemoveUserFromClientAsync(string userName, string clientId);
+    Task ResetPasswordAsync(string username);
+    Task ConfirmationAccountAsync(string name, string code);
+    Task ConfirmationResetPasswordAsync(string email, string password, string code);
 }

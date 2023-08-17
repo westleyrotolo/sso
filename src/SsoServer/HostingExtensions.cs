@@ -15,6 +15,7 @@ using SsoServer.Infrastructures;
 using SsoServer.Models.Users;
 using SsoServer.Services;
 using System.Globalization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace SsoServer
 {
@@ -150,6 +151,16 @@ namespace SsoServer
                 });
             builder.Services.AddTransient<IUserService, UserService>();
             builder.Services.AddTransient<IClientService, ClientService>();
+            builder.Services.AddTransient<IEmailSender, EmailSender>(i =>
+    new EmailSender
+    (
+        builder.Configuration["EmailSender:Host"],
+        builder.Configuration.GetValue<int>("EmailSender:Port"),
+        builder.Configuration.GetValue<bool>("EmailSender:EnableSSL"),
+        builder.Configuration["EmailSender:UserName"],
+        builder.Configuration["EmailSender:Password"]
+)
+);
             builder.Services.AddAutoMapper(typeof(HostingExtensions));
 
 

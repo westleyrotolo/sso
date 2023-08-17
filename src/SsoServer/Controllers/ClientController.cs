@@ -30,7 +30,7 @@ public class ClientController : BaseController
     public async Task<IActionResult> CreateClientAsync([FromBody]ClientSubmitDto clientSubmitDto)
     {
         var client = _mapper.Map<Client>(clientSubmitDto);
-        await _clientService.AddClientAsync(client);
+        client = await _clientService.AddClientAsync(client.ClientId, client.ClientName, client.Description);
         return Ok(_mapper.Map<ClientDto>(client));
     }
 
@@ -38,7 +38,7 @@ public class ClientController : BaseController
     public async Task<IActionResult> UpdateClientAsync([FromBody] ClientSubmitDto clientSubmitDto)
     {
         var client = _mapper.Map<Client>(clientSubmitDto);
-        await _clientService.UpdateClientAsync(client);
+        client = await _clientService.UpdateClientAsync(client.ClientId, client.ClientName, client.Description);
         return Ok(_mapper.Map<ClientDto>(client));
     }
 

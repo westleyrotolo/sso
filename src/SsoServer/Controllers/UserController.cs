@@ -30,6 +30,7 @@ public class UserController : BaseController
     public async Task<IActionResult> CreateUserAsync([FromBody] UserSubmitDto userSubmitDto, [FromQuery]string clientId)
     {
         var user = _mapper.Map<ApplicationUser>(userSubmitDto);
+        user.Id = Guid.NewGuid().ToString();
         await _userService.AddUserAsync(user, userSubmitDto.Password, userSubmitDto.Roles.ToArray());
         if (!clientId.IsNullOrEmpty())
             await _userService.AssociateUserToClientId(user.UserName, clientId);
@@ -99,5 +100,37 @@ public class UserController : BaseController
         return Ok();
     }
 
-    
+    [HttpPost("ResetPassword")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ResetPasswordAsync([FromBody] LoginResetPassword login)
+    {
+        try
+        {
+
+            await _userService.ResetPasswordAsync(login.UserName);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+
+        }
+    }
+    [HttpPost("ConfirmResetPassword")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ConfirmResetPasswordAsync([FromBody] LoginConfirmResetPassword login)
+    {
+        try
+        {
+
+            await _userService.ConfirmationResetPasswordAsync(login.UserName, login.Password, login.Code);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+
+        }
+    }
+
 }

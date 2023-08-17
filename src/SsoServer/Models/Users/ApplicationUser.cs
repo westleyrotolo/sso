@@ -9,6 +9,10 @@ namespace SsoServer.Models.Users
 {
     public class ApplicationUser : IdentityUser
     {
+        public ApplicationUser()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
         public string FirstName { get; set; } 
         public string LastName { get; set; }
         [NotMapped]

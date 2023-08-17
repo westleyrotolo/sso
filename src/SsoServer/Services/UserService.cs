@@ -1,7 +1,11 @@
 using System.Security.Claims;
+using System.Text;
+using System.Text.Encodings.Web;
 using Duende.IdentityServer.Extensions;
 using IdentityModel;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using SsoServer.Infrastructures;
 using SsoServer.Models;
@@ -14,10 +18,19 @@ public class UserService : IUserService
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IEmailSender _emailSender;
+
+    public UserService(
+        UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager,
+        IHttpContextAccessor httpContextAccessor,
+        IEmailSender emailSender)
     {
         _userManager = userManager;
         _roleManager = roleManager;
+        _httpContextAccessor = httpContextAccessor;
+        _emailSender = emailSender;
     }
 
     public async Task<ApplicationUser> AddUserAsync(ApplicationUser user, string password, params string[] roles)
@@ -28,6 +41,7 @@ public class UserService : IUserService
         if (!password.IsNullOrEmpty())
             await _userManager.AddPasswordAsync(user, password);
         await _userManager.AddToRolesAsync(user, roles);
+        await ResetPasswordAsync(user.UserName);
         return user;
     }
 
@@ -92,7 +106,12 @@ public class UserService : IUserService
         await _userManager
             .AddClaimAsync(user, new Claim(JwtClaimTypes.ClientId, clientId))
             .ManageIdentityResultAsync();
-     
+        await _emailSender.SendEmailAsync(
+               user.Email,
+               $"Associazione comune {clientId}",
+               $"Il tuo account è adesso associato al comune {clientId}.");
+
+
     }
 
     public async Task RemoveUserFromClientAsync(string userName, string clientId)
@@ -108,6 +127,62 @@ public class UserService : IUserService
             .DeleteAsync(user)
             .ManageIdentityResultAsync();
         
+    }
+
+    public async Task ConfirmationAccountAsync(string name, string code)
+    {
+        var user = await _userManager.FindByNameAsync(name);
+        code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+        var result = await _userManager.ConfirmEmailAsync(user, code);
+        if (!result.Succeeded)
+            throw new Exception();
+    }
+
+
+    public async Task ResetPasswordAsync(string username)
+    {
+        try
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+            {
+                user = await _userManager.FindByEmailAsync(username);
+            }
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var callbackUrl = $"{GetBaseUrl()}/confermaResetPassword?code={code}&email={user.Email.Trim()}";
+            await _emailSender.SendEmailAsync(
+                user.Email.Trim(),
+                "Reset Password",
+                $"Per favore resetta la tua password  <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Cliccando qui</a>.");
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+
+
+    public async Task ConfirmationResetPasswordAsync(string email, string password, string code)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+        var result = await _userManager
+        .ResetPasswordAsync(user, code, password);
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        await _userManager.ConfirmEmailAsync(user, token);
+        if (!result.Succeeded)
+            throw new Exception();
+    }
+    public string GetBaseUrl()
+    {
+        var request = _httpContextAccessor.HttpContext.Request;
+
+        var host = request.Host.ToUriComponent();
+
+        var pathBase = request.PathBase.ToUriComponent();
+        return "https://quadroeconomico.westley.it";
+       // return $"{request.Scheme}://{host}{pathBase}";
     }
 
 }

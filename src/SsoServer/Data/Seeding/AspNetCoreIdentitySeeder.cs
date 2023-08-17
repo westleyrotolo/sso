@@ -23,7 +23,7 @@ using System.Security.Claims;
 
             if (autoMigrateDatabase)
             {
-             //   dbContext.Database.Migrate();
+                dbContext.Database.Migrate();
             }
 
             var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
