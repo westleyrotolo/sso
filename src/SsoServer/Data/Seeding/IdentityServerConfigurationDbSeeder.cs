@@ -25,7 +25,7 @@ namespace SsoServer.Data.Seeding
                 new ApiScope("api2", displayName: "API 2"),
                 // API endpoints in the same application hosting IdentityServer
                 new ApiScope(IdentityServerConstants.LocalApi.ScopeName, displayName: IdentityServerConstants.LocalApi.ScopeName),
-                new ApiScope(QEApi, displayName: "Farmland Web API"),
+                new ApiScope(QEApi, displayName: "QE Web API"),
             };
 
         private static IEnumerable<Client> ClientsToSeed =>
@@ -35,6 +35,7 @@ namespace SsoServer.Data.Seeding
                 {
                     ClientId = "rutino",
                     ClientName = "Comune Di Rutino",
+                    Description = "Comune Di Rutino",
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     // Secret code
                     AllowedScopes =
@@ -46,62 +47,6 @@ namespace SsoServer.Data.Seeding
                     
                     RequireClientSecret = true,
                     ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
-                },
-                new()
-                {
-                    ClientId = "torchiara",
-                    ClientName = "Comune Di Torchiara",
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-                    // Secret code
-                    ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
-                    AllowedScopes = {
-                        "api1",
-                        "api2",
-                        QEApi
-                    },
-                    RequireClientSecret = true
-                },
-                new()
-                {
-                    ClientId = "lustra",
-                    ClientName = "Comune Di Lustra",
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-                    // Secret code
-                    ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
-                    AllowedScopes = {
-                        "api1",
-                        "api2",
-                        QEApi,
-                    },
-                    
-                    RequireClientSecret = true
-                },
-                // interactive client using code flow + pkce
-                new()
-                {
-                    ClientId = "interactive.client",
-                    ClientName = "Interactive Client",
-                    ClientSecrets = { new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256()) },
-
-                    AllowedGrantTypes = GrantTypes.Code,
-
-                    // where to redirect to after login
-                    RedirectUris = { "https://auth.westley.it/signin-oidc" },
-                    FrontChannelLogoutUri = "https://auth.westley.it/signout-oidc",
-                    // where to redirect to after logout
-                    PostLogoutRedirectUris = { "https://auth.westley.it/signout-callback-oidc" },
-
-                    // In order to support refresh token, offline access is required.
-                    AllowOfflineAccess = true,
-                    AllowedScopes = new List<string>
-                    {
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile,
-                        "api2",
-                        // Access to local API in the same application hosting SSO server
-                        IdentityServerConstants.LocalApi.ScopeName,
-                        QEApi
-                    },
                 }
             };
 
