@@ -181,7 +181,7 @@ public class UserService : IUserService
         var host = request.Host.ToUriComponent();
 
         var pathBase = request.PathBase.ToUriComponent();
-        return "https://quadroeconomico.westley.it";
+        return "https://app.monitoranext.it";
        // return $"{request.Scheme}://{host}{pathBase}";
     }
 

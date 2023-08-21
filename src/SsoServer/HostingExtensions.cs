@@ -63,7 +63,7 @@ namespace SsoServer
             builder.Services
                 .AddIdentityServer(options =>
                 {
-                    options.IssuerUri = "https://auth.westley.it";
+                    options.IssuerUri = "https://auth.monitoranext.it";
                     options.Events.RaiseErrorEvents = true;
                     options.Events.RaiseInformationEvents = true;
                     options.Events.RaiseFailureEvents = true;
@@ -108,7 +108,7 @@ namespace SsoServer
             })
                 .AddJwtBearer(option =>
                 {
-                    option.Authority = "https://auth.westley.it";
+                    option.Authority = "https://auth.monitoranext.it";
                     option.Audience = "api1";
                     option.TokenValidationParameters.ValidateAudience = false;
                     option.TokenValidationParameters.ValidateIssuer = false;

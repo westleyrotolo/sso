@@ -112,7 +112,6 @@ using System.Security.Claims;
                             new(JwtClaimTypes.GivenName, firstname),
                             new(JwtClaimTypes.FamilyName, lastname),
                             new(JwtClaimTypes.ClientId, "rutino"),
-                            new(JwtClaimTypes.ClientId, "torchiara"),
                         }).Result;
 
                     if (!result.Succeeded)

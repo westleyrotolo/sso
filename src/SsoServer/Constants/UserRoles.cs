@@ -20,3 +20,4 @@
         public static readonly string[] SupportedRoles = new string[] { Administrator, SuperAdministrator, User };
     }
 }
+ 
