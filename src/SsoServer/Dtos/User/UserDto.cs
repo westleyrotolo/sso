@@ -8,5 +8,14 @@ public class UserDto
     public string Id { get; set; }
     public List<string> Roles { get; set; }
     public List<string> Clients { get; set; }
-
+    public string Qualification { get; set; }
+    public string FiscalCode { get; set; }
+    public string Address { get; set; }
+    public string City { get; set; }
+    public string Province { get; set; }
+    public string PhoneNumber { get; set; }
+    public string MobilePhoneNumber { get; set; }
+    public DateTime? LockoutEnd { get; set; }
+    public bool IsLocked => LockoutEnd != null;
+    public bool EmailConfirmed { get; set; }
 }
