@@ -33,9 +33,9 @@ namespace SsoServer.Data.Seeding
             {
                 new()
                 {
-                    ClientId = "rutino",
-                    ClientName = "Comune Di Rutino",
-                    Description = "Comune Di Rutino",
+                    ClientId = "rubrik",
+                    ClientName = "Rubrik",
+                    Description = "Enjoy your Business",
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     // Secret code
                     AllowedScopes =
