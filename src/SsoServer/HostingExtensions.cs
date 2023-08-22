@@ -177,22 +177,20 @@ namespace SsoServer
             });
             app.UseSerilogRequestLogging();
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
+            app.UseDeveloperExceptionPage();
 
-                // Automatically apply db migrations and seed development databases for development purpose.
-                // In production, this should either be done manually, or done through a UI application.
-                app.EnsureAspNetCoreIdentityDatabaseIsSeeded(true);
-                app.EnsureIdentityServerConfigurationDbIsSeeded(true);
-                app.EnsureIdentityServerPersistedGrantDbIsSeeded(true);
+            // Automatically apply db migrations and seed development databases for development purpose.
+            // In production, this should either be done manually, or done through a UI application.
+            app.EnsureAspNetCoreIdentityDatabaseIsSeeded(true);
+            app.EnsureIdentityServerConfigurationDbIsSeeded(true);
+            app.EnsureIdentityServerPersistedGrantDbIsSeeded(true);
 
-                // Swagger UI for development
-                app.UseSwagger();
+            // Swagger UI for development
+            app.UseSwagger();
                 
 
-                app.UseSwaggerUI();
-            }
+            app.UseSwaggerUI();
+            
 
             app.UseStaticFiles();
             app.UseRouting();
