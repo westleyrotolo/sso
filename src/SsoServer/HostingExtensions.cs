@@ -61,7 +61,7 @@ namespace SsoServer
 
             // Identity Server
             builder.Services.AddIdentityServer()
-                .AddIdentityServer(JwtBearerDefaults.AuthenticationScheme, options =>
+                .AddIdentityServer(ptions =>
                 {
                     options.IssuerUri = "http://172.21.0.6";
                     options.Events.RaiseErrorEvents = true;
