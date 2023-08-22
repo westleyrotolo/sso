@@ -32,6 +32,7 @@ namespace SsoServer
             // The call to MigrationsAssembly(�) later tells Entity Framework that the host project will contain the migrations. This is necessary since the host project is in a different assembly than the one that contains the DbContext classes.
             var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
             string dbConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
