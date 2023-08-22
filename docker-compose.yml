@@ -9,3 +9,9 @@ services:
     ports:
       - "1080:80"
       - "1443:443"
+    networks:
+      nginx-letsencrypt_mynetwork:
+        ipv4_address: 172.21.0.6
+networks:
+  nginx-letsencrypt_mynetwork:
+    external: true
