@@ -60,8 +60,8 @@ namespace SsoServer
                 .AddDefaultTokenProviders();
 
             // Identity Server
-            builder.Services.AddIdentityServer()
-                .AddIdentityServer(ptions =>
+            builder.Services
+                .AddIdentityServer( options =>
                 {
                     options.IssuerUri = "http://172.21.0.6";
                     options.Events.RaiseErrorEvents = true;
@@ -105,8 +105,8 @@ namespace SsoServer
                 .AddJwtBearer(option =>
                 {
                     option.RequireHttpsMetadata = false;
-                    option.Authority = "http://172.21.0.6";
-                    option.Audience = "api1";
+                    //option.Authority = "http://172.21.0.6";
+                    //option.Audience = "api1";
                     option.TokenValidationParameters.ValidateActor = false;
                     option.TokenValidationParameters.ValidateLifetime = false;
                     option.TokenValidationParameters.ValidateAudience = false;
