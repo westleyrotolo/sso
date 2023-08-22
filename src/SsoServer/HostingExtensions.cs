@@ -169,11 +169,13 @@ namespace SsoServer
 
         public static WebApplication ConfigurePipeline(this WebApplication app)
         {
+            /*
             app.Use((context, next) =>
             {
                 context.Request.Scheme = "https";
                 return next();
             });
+            */
             app.UseSerilogRequestLogging();
 
             app.UseDeveloperExceptionPage();
