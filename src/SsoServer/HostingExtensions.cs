@@ -108,6 +108,7 @@ namespace SsoServer
             })
                 .AddJwtBearer(option =>
                 {
+                    option.RequireHttpsMetadata = false;
                     option.Authority = "http://172.21.0.6";
                     option.Audience = "api1";
                     option.TokenValidationParameters.ValidateActor = false;
