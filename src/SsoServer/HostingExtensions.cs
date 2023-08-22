@@ -60,8 +60,8 @@ namespace SsoServer
                 .AddDefaultTokenProviders();
 
             // Identity Server
-            builder.Services
-                .AddIdentityServer(options =>
+            builder.Services.AddIdentityServer()
+                .AddIdentityServer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
                     options.IssuerUri = "http://172.21.0.6";
                     options.Events.RaiseErrorEvents = true;
@@ -101,11 +101,7 @@ namespace SsoServer
             
             
             builder.Services
-                .AddAuthentication(option =>    
-            {
-                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(option =>
                 {
                     option.RequireHttpsMetadata = false;
