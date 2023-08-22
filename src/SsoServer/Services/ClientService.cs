@@ -1,6 +1,7 @@
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
 using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Stores;
 using IdentityModel;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -8,7 +9,7 @@ using SsoServer.Data.Seeding;
 
 namespace SsoServer.Services;
 
-public class ClientService : IClientService
+public class ClientService : IClientService, IClientStore
 {
     private readonly ConfigurationDbContext _configurationDbContext;
     public ClientService(ConfigurationDbContext configurationDbContext)
@@ -84,5 +85,11 @@ public class ClientService : IClientService
         await _configurationDbContext.SaveChangesAsync();
         Log.Information($"Successfully added client: {client.ClientName}");
         return client;
+    }
+
+    public async Task<Client> FindClientByIdAsync(string clientId)
+    {
+        var c = await _configurationDbContext.Clients.FirstAsync(x => x.ClientId == clientId);
+        return c.ToModel();
     }
 }

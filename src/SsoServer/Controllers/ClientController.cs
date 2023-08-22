@@ -9,7 +9,7 @@ using SsoServer.Services;
 
 namespace SsoServer.Controllers;
 
-//[Authorize(Roles = Constants.UserRoles.SuperAdministrator, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(Roles = Constants.UserRoles.SuperAdministrator, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class ClientController : BaseController
 {
     private readonly IMapper _mapper;

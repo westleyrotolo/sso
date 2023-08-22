@@ -63,14 +63,14 @@ namespace SsoServer
             builder.Services
                 .AddIdentityServer( options =>
                 {
-                    options.IssuerUri = "http://172.21.0.6";
+                    options.IssuerUri = "https://auth.monitoranext.it";
                     options.Events.RaiseErrorEvents = true;
                     options.Events.RaiseInformationEvents = true;
                     options.Events.RaiseFailureEvents = true;
                     options.Events.RaiseSuccessEvents = true;
                     // see https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/
                     options.EmitStaticAudienceClaim = true;
-                })
+                }).AddClientStore<ClientService>()
                 // Store configuration data: resources and clients, etc.
                 .AddConfigurationStore(options => 
                 {
@@ -104,8 +104,8 @@ namespace SsoServer
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(option =>
                 {
-                    option.RequireHttpsMetadata = false;
-                     option.Authority = "http://172.21.0.6";
+                    option.RequireHttpsMetadata = true;
+                     option.Authority = "https://auth.monitoranext.it";
                     //option.Audience = "api1";
                     option.TokenValidationParameters.ValidateActor = false;
                     option.TokenValidationParameters.ValidateLifetime = false;
