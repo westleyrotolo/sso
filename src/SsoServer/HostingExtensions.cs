@@ -64,7 +64,7 @@ namespace SsoServer
             builder.Services
                 .AddIdentityServer( options =>
                 {
-                    options.IssuerUri = "http://172.21.0.6";
+                    options.IssuerUri = "https://auth.monitoranext.it";
                     options.Events.RaiseErrorEvents = true;
                     options.Events.RaiseInformationEvents = true;
                     options.Events.RaiseFailureEvents = true;
@@ -105,8 +105,8 @@ namespace SsoServer
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(option =>
                 {
-                    option.RequireHttpsMetadata = false;
-                     option.Authority = "http://172.21.0.6";
+                    option.RequireHttpsMetadata = true;
+                     option.Authority = "https://auth.monitoranext.it";
                     //option.Audience = "api1";
                     option.TokenValidationParameters.ValidateActor = false;
                     option.TokenValidationParameters.ValidateLifetime = false;
@@ -170,13 +170,13 @@ namespace SsoServer
 
         public static WebApplication ConfigurePipeline(this WebApplication app)
         {
-            /*
+            
             app.Use((context, next) =>
             {
                 context.Request.Scheme = "https";
                 return next();
             });
-            */
+            
             app.UseSerilogRequestLogging();
 
             app.UseDeveloperExceptionPage();
