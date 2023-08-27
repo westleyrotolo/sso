@@ -49,7 +49,6 @@ namespace SsoServer
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(opt =>
             {
-
                 opt.Password.RequireDigit = false;
                 opt.Password.RequiredLength = 3;
                 opt.Password.RequiredUniqueChars = 1;

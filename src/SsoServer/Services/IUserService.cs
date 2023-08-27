@@ -16,4 +16,5 @@ public interface IUserService
     Task ResetPasswordAsync(string username);
     Task ConfirmationAccountAsync(string name, string code);
     Task ConfirmationResetPasswordAsync(string email, string password, string code);
+    Task<List<string>> GetClientsByUser(string username, string password);
 }

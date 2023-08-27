@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using Duende.IdentityServer.Extensions;
+using Duende.IdentityServer.Models;
 using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -20,17 +21,32 @@ public class UserService : IUserService
 
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IEmailSender _emailSender;
+    private readonly SignInManager<ApplicationUser> _signInManager;
 
     public UserService(
         UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager,
         IHttpContextAccessor httpContextAccessor,
+        SignInManager<ApplicationUser> signInManager,
         IEmailSender emailSender)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _httpContextAccessor = httpContextAccessor;
         _emailSender = emailSender;
+        _signInManager = signInManager;
+    }
+
+    public async Task<List<string>> GetClientsByUser(string username, string password)
+    {
+        var user = await _userManager.FindByNameAsync(username);
+        var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
+        if (!result.Succeeded) throw new Exception();
+        var claims = await _userManager.GetClaimsAsync(user);
+        var clients = claims.Where(x => x.Type == JwtClaimTypes.ClientId)?.Select(x => x.Value)?.ToList() ??
+                      new List<string>();
+        return clients;
+
     }
 
     public async Task<ApplicationUser> AddUserAsync(ApplicationUser user, string password, params string[] roles)
@@ -82,6 +98,7 @@ public class UserService : IUserService
 
     public async Task<IList<ApplicationUser>> GetAllUserByClientIdAsync(string clientId)
     {
+        
         var users = await _userManager.GetUsersForClaimAsync(new Claim(JwtClaimTypes.ClientId, clientId));
         
         foreach (var user in users)

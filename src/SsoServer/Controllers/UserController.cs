@@ -116,6 +116,14 @@ public class UserController : BaseController
 
         }
     }
+
+    [HttpPost("Clients")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ClientsAsync([FromBody] LoginDto loginDto)
+    {
+        var clients = await _userService.GetClientsByUser(loginDto.UserName, loginDto.Password);
+        return Ok(clients);
+    }
     [HttpPost("ConfirmResetPassword")]
     [AllowAnonymous]
     public async Task<IActionResult> ConfirmResetPasswordAsync([FromBody] LoginConfirmResetPassword login)
