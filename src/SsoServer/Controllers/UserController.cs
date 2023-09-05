@@ -12,7 +12,7 @@ using SsoServer.Services;
 
 namespace SsoServer.Controllers;
 
-[Authorize(Roles = $"{Constants.UserRoles.SuperAdministrator}, {Constants.UserRoles.Administrator}", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+//[Authorize(Roles = $"{Constants.UserRoles.SuperAdministrator}, {Constants.UserRoles.Administrator}", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class UserController : BaseController
 {
     private readonly IMapper _mapper;
