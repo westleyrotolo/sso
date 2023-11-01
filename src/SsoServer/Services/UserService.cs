@@ -195,11 +195,8 @@ public class UserService : IUserService
     {
         var request = _httpContextAccessor.HttpContext.Request;
 
-        var host = request.Host.ToUriComponent();
-
-        var pathBase = request.PathBase.ToUriComponent();
-        return "https://app.monitoranext.it";
-       // return $"{request.Scheme}://{host}{pathBase}";
+        var host = request.Headers[Constants.Constant.X_REFERER_HOST].First();
+        return $"{request.Scheme}://{host}";
     }
 
 }
